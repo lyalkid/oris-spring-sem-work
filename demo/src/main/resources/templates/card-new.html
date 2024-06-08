@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org">
+</head>
+<meta charset="UTF-8">
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #ffffff; /* Белый цвет шрифта */
+        background-color: #1a237e;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    form {
+        background: #3949ab; /* Светло-синий цвет фона */
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        margin: 50px auto;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: #ffffff;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #1a237e; /* Светло-желтый цвет */
+        color: #ffffff; /* Темный цвет для текста на кнопке */
+        font-size: 17px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background: #555;
+        color: #fff; /* Белый цвет для текста на кнопке при наведении */
+    }
+
+    p {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    a {
+        color: #ffc107; /* Светло-желтый цвет */
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+
+</style>
+
+<body>
+<h2>Add Card</h2>
+<form th:action="@{/cards/new}" th:object="${card}" method="post">
+    <div>
+        <label for="question">Term:</label>
+        <input type="text" id="question" th:field="*{question}" required>
+    </div>
+    <div>
+        <label for="answer">Definition:</label>
+        <input type="text" id="answer" th:field="*{answer}" required>
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
+<p><a th:href="@{/cards}">Back to cards</a></p>
+</body>
+</html>

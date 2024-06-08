@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org"
+>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <title>Flashcard App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <style>
+       * {
+           padding: 0;
+           margin: 0;
+           box-sizing: border-box;
+           font-family: "Poppins", sans-serif;
+       }
+       body {
+           background-color: #1a237e; /* Темно-синий фон */
+           color: #ffffff; /* Белый цвет шрифта */
+       }
+       .container {
+           width: 90vw;
+           max-width: 62.5em;
+           position: relative;
+           margin: auto;
+       }
+       header {
+           display: flex;
+           justify-content: center;
+           padding: 1em 0;
+       }
+       header h1 {
+           font-size: 2em;
+           font-weight: 700;
+       }
+       .add-flashcard-con {
+           /*display: flex;*/
+           /*!*justify-content: center;*!*/
+           /*padding: 1.2em 0;*/
+           position: fixed;
+           bottom: 8rem;
+           right: 8rem;
+       }
+       button {
+           border: none;
+           outline: none;
+           cursor: pointer;
+       }
+       .add-flashcard-con button {
+           font-size: 1em;
+           background-color: #3949ab; /* Более светлый темно-синий */
+           color: #ffffff;
+           padding: 0.8em 1.2em;
+           font-weight: 500;
+           border-radius: 0.4em;
+       }
+       #card-con {
+           margin-top: 1em;
+       }
+       .question-container {
+           width: 90vw;
+           max-width: 34em;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           background-color: #3949ab; /* Темно-синий */
+           color: #ffffff; /* Белый цвет текста */
+           position: absolute;
+           transform: translate(-50%, -50%);
+           top: 50%;
+           left: 50%;
+           padding: 3em 2em;
+           border-radius: 0.6em;
+           box-shadow: 0 1em 2em rgba(28, 0, 80, 0.2);
+       }
+       .question-container h2 {
+           font-size: 2.2em;
+           color: #ffffff; /* Белый цвет текста */
+           font-weight: 600;
+           text-align: center;
+           margin-bottom: 2em;
+       }
+       .wrapper {
+           display: grid;
+           grid-template-columns: 11fr 1fr;
+           gap: 1em;
+           margin-bottom: 1em;
+       }
+       .error-con {
+           align-self: center;
+       }
+       #error {
+           color: #ff5353;
+           font-weight: 400;
+       }
+       a {
+           color: #ffc107; /* Светло-желтый цвет */
+           text-decoration: none;
+       }
+       .fa-xmark {
+           font-size: 1.4em;
+           background-color: #1a237e; /* Темно-синий */
+           height: 1.8em;
+           width: 1.8em;
+           display: grid;
+           place-items: center;
+           color: #ffffff; /* Белый цвет текста */
+           border-radius: 50%;
+           cursor: pointer;
+           justify-self: flex-end;
+       }
+       label {
+           color: #ffffff; /* Белый цвет текста */
+           font-weight: 600;
+           margin-bottom: 0.3em;
+       }
+       textarea {
+           width: 100%;
+           padding: 0.7em 0.5em;
+           border: 1px solid #d0d0d0;
+           outline: none;
+           color: #1a237e; /* Темно-синий текст */
+           border-radius: 0.3em;
+           resize: none;
+       }
+       textarea:not(:last-child) {
+           margin-bottom: 1.2em;
+       }
+       textarea:focus {
+           border-color: #ffffff; /* Белый цвет */
+       }
+       #save-btn {
+           font-size: 1em;
+           background-color: #1a237e; /* Темно-синий */
+           color: #ffffff; /* Белый цвет текста */
+           padding: 0.6em 0;
+           border-radius: 0.3em;
+           font-weight: 600;
+       }
+       .card-list-container {
+           display: grid;
+           padding: 0.2em;
+           gap: 1.5em;
+           grid-template-columns: 1fr 1fr 1fr;
+       }
+       .card {
+           background-color: #3949ab; /* Темно-синий */
+           color: #ffffff; /* Белый цвет текста */
+           box-shadow: 0 0.4em 1.2em rgba(28, 0, 80, 0.2);
+           padding: 1.2em;
+           border-radius: 0.4em;
+       }
+       .question-div,
+       .answer-div {
+           text-align: justify;
+       }
+       .question-div {
+           margin-bottom: 0.5em;
+           font-weight: 500;
+       }
+       .answer-div {
+           margin-top: 1em;
+           font-weight: 400;
+       }
+       .show-hide-btn {
+           display: block;
+           background-color: #1a237e; /* Темно-синий */
+           color: #ffffff; /* Белый цвет текста */
+           text-decoration: none;
+           text-align: center;
+           padding: 0.6em 0;
+           border-radius: 0.3em;
+       }
+       .buttons-con {
+           display: flex;
+           justify-content: flex-end;
+       }
+       .edit,
+       .delete {
+           background-color: transparent;
+           padding: 0.5em;
+           font-size: 1.2em;
+       }
+       .edit {
+           color: #1a237e; /* Темно-синий */
+       }
+       .delete {
+           color: #ff5353;
+       }
+       .hide {
+           display: none;
+       }
+       @media screen and (max-width: 800px) {
+           .card-list-container {
+               grid-template-columns: 1fr 1fr;
+               gap: 0.8em;
+           }
+       }
+       @media screen and (max-width: 450px) {
+           body {
+               font-size: 14px;
+           }
+           .card-list-container {
+               grid-template-columns: 1fr;
+               gap: 1.2em;
+           }
+       }
+       ul {
+           list-style-type: none;
+           margin: 0;
+           padding: 0;
+           overflow: hidden;
+           background-color: #333;
+       }
+
+       li {
+           float: left;
+           border-right:1px solid #bbb;
+       }
+
+       li:last-child {
+           border-right: none;
+       }
+
+       li a {
+           display: block;
+           color: white;
+           text-align: center;
+           padding: 14px 16px;
+           text-decoration: none;
+       }
+
+       li a:hover:not(.active) {
+           background-color: #111;
+       }
+
+       .active {
+           background-color: #04AA6D;
+       }
+   </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">FLashCards</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="https://t.me/Lyalkid" target="_blank">Contact</a></li>
+            <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a href="/my_profile">My Profile</a>
+            </li>
+
+            <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a href="/cards">My Cards</a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a href="/cards/new">Add Card</a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a href="/cards/edit" >
+                    edit
+                </a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a href="/cards/delete">
+                    delete
+                </a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- <div class="container">
+    <h2>My Flashcards</h2>
+
+    <div id="book-info"></div>
+    <div class="card-container">
+        <div th:each="card: ${listCards}" class="card">
+                        <div class="card-content">
+                <p class="card-question" th:text="${card.question}">Question</p>
+                <p class="card-answer" th:text="${card.answer}">Answer</p>
+            </div>
+        </div>
+    </div> -->
+
+<div class="container">
+    <div id="card-con">
+        <div class="card-list-container">
+            <div th:each="card: ${listCards}" class="card">
+                <div class="card-content">
+                    <div class="id-div" th:text="${card.id}">id</div>
+                    <div class="question-div" th:text="${card.question}">Question</div>
+                    <div class="answer-div hide" th:text="${card.answer}">Answer</div>
+                    <a class="show-hide-btn">Show answer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<div class="add-flashcard-con">
+    <button id="add-flashcard">Add Flashcard</button>
+</div>
+    <div class="question-container hide" id="add-question-card">
+        <h2>Add Flashcard</h2>
+        <div class="wrapper">
+            <div class="error-con">
+                <span class="hide" id="error">Input fields cannot be empty!</span>
+            </div>
+            <i class="fa-solid fa-xmark" id="close-btn"></i>
+        </div>
+        <label for="question">Question:</label>
+        <textarea
+                class="input"
+                id="question"
+                placeholder="Type the question here..."
+                rows="2"
+        ></textarea>
+        <label for="answer">Answer:</label>
+        <textarea
+                class="input"
+                id="answer"
+                rows="4"
+                placeholder="Type the answer here..."
+        ></textarea>
+        <button type="submit" id="save-btn">Save</button>
+    </div>
+
+<script src="/static/js/scripts.js"></script>
+</body>
+</html>
+
+
