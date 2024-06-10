@@ -26,7 +26,8 @@ public class Student {
     private String username;
     private String password;
     private String email;
-
+    private String description;
+    private String role;
 
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)

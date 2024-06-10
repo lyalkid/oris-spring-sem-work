@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudentService {
-
+   void save(Student student);
    Optional<Student> findByUsername(String username);
 }

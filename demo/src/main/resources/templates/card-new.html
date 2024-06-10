@@ -6,6 +6,24 @@
 </head>
 <meta charset="UTF-8">
 
+
+<body>
+<h2>Add Card</h2>
+<form th:action="@{/cards/new}" th:object="${card}" method="post">
+    <div>
+        <label for="question">Term:</label>
+        <input type="text" id="question" th:field="*{question}" required>
+    </div>
+    <div>
+        <label for="answer">Definition:</label>
+        <input type="text" id="answer" th:field="*{answer}" required>
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
+<p><a th:href="@{/cards}">Back to cards</a></p>
+</body>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -84,22 +102,4 @@
     }
 
 </style>
-
-<body>
-<h2>Add Card</h2>
-<form th:action="@{/cards/new}" th:object="${card}" method="post">
-    <div>
-        <label for="question">Term:</label>
-        <input type="text" id="question" th:field="*{question}" required>
-    </div>
-    <div>
-        <label for="answer">Definition:</label>
-        <input type="text" id="answer" th:field="*{answer}" required>
-    </div>
-    <div>
-        <button type="submit">Save</button>
-    </div>
-</form>
-<p><a th:href="@{/cards}">Back to cards</a></p>
-</body>
 </html>

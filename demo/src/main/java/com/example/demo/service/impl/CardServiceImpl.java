@@ -28,6 +28,16 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public Optional<Card> getCardById(Long id) {
+        return cardRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Card> getCardById(Integer id) {
+        return cardRepository.findById(id);
+    }
+
+    @Override
     public List<Card> getCardsByStudentId(UUID studentId) {
         return cardRepository.findByStudentId(studentId);
     }

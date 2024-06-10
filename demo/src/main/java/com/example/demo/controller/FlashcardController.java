@@ -38,7 +38,12 @@ public class FlashcardController {
     @GetMapping("/cards")
     public String viewHomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Optional<Student> student =  studentService.findByUsername(userDetails.getUsername());
-        List<Card> listCards = cardService.getCardsByStudentId(student.get().getId());
+        List<Card> listCards = new ArrayList<>();
+        if(student.get().getRole().equals("ROLE_ADMIN")) {
+           listCards = cardService.getAllCards();
+        }else {
+            listCards = cardService.getCardsByStudentId(student.get().getId());
+        }
         model.addAttribute("listCards", listCards);
 
         return "my-cards"; // Имя шаблона HTML без расширения
@@ -54,7 +59,7 @@ public class FlashcardController {
 
     // Обработка добавления новой карточки
     @PostMapping("/cards/new")
-public String createCard(@ModelAttribute("card") Card card, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        public String createCard(@ModelAttribute("card") Card card, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Student student = studentRepository.findByUsername(userDetails.getUsername()).get();
         card.setStudent(student);
         cardService.saveCard(card);
@@ -62,7 +67,7 @@ public String createCard(@ModelAttribute("card") Card card, Model model, @Authen
     }
 
     @GetMapping("/cards/delete")
-    public String editForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String deleteForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Student student = studentRepository.findByUsername(userDetails.getUsername()).get();
         List<Card> cards = cardService.getCardsByStudentId(student.getId());
         List<Long> ids = cards.stream().map(Card::getId).toList();
@@ -78,23 +83,44 @@ public String createCard(@ModelAttribute("card") Card card, Model model, @Authen
         return "redirect:/cards/delete";
     }
 
+    @GetMapping("/cards/edit")
+    public String editForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Student student = studentRepository.findByUsername(userDetails.getUsername()).get();
+        List<Card> cards = new ArrayList<>();
+        if(student.getRole().equals("ROLE_ADMIN")) {
+            cards = cardService.getAllCards();
+        }else {
+            cards = cardService.getCardsByStudentId(student.getId());
+        }
+        List<Long> ids = cards.stream().map(Card::getId).toList();
+        model.addAttribute("user", student);
+        model.addAttribute("ids", ids);
+        return "edit";
+    }
 
-//    @ResponseBody
-//    public String addFlashcard(@RequestParam String question, @RequestParam String answer) {
-//        if (question.isEmpty() || answer.isEmpty()) {
-//            return "Input fields cannot be empty!";
-//        }
-//        Card newCard = new Card();
-//        newCard.setQuestion(question);
-//        newCard.setAnswer(answer);
-//        cardService.saveCard(newCard);
-//        return "Card added successfully!";
-//    }
+    @GetMapping("/cards/{id}/edit")
+    public String showEditForm(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Optional<Card> card = cardService.getCardById(id);
+        if (card.isPresent()) {
+            model.addAttribute("card", card.get());
+            return "card-edit"; // Имя шаблона HTML для формы редактирования карточки
+        } else {
+            return "redirect:/cards";
+        }
+    }
 
-//    // Получение всех карточек
-//    @GetMapping("/cards")
-//    @ResponseBody
-//    public List<Card> getAllCards() {
-//        return cardService.getAllCards();
-//    }
+    @PostMapping("/cards/{id}/edit")
+    public String updateCard(@PathVariable("id") Long id, @ModelAttribute("card") Card updatedCard, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Optional<Card> existingCard = cardService.getCardById(id);
+        if (existingCard.isPresent()) {
+            Card card = existingCard.get();
+            card.setQuestion(updatedCard.getQuestion());
+            card.setAnswer(updatedCard.getAnswer());
+            cardService.saveCard(card);
+            return "redirect:/cards";
+        } else {
+            return "redirect:/cards";
+        }
+    }
+
 }

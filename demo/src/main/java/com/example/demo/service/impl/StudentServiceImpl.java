@@ -20,6 +20,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private StudentRepository studentRepository;
 
     public Student registerNewUser(Student user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -27,6 +29,11 @@ public class StudentServiceImpl implements StudentService {
         role.setName("ROLE_USER");
         user.setRoles(Collections.singleton(role));
         return userRepository.save(user);
+    }
+
+    @Override
+    public void save(Student student) {
+        studentRepository.save(student);
     }
 
     @Override

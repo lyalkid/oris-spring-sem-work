@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Card</title>
+
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ffffff; /* Белый цвет шрифта */
+            background-color: #1a237e;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        form {
+            background: #3949ab; /* Светло-синий цвет фона */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 50px auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #1a237e; /* Светло-желтый цвет */
+            color: #ffffff; /* Темный цвет для текста на кнопке */
+            font-size: 17px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #555;
+            color: #fff; /* Белый цвет для текста на кнопке при наведении */
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #ffc107; /* Светло-желтый цвет */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+        }
+
+        .success {
+            color: #00418f; /* Светло-желтый цвет */
+            font-size: 12px;
+            margin-top: -10px;
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+<h2>Edit Card</h2>
+<form action="#" th:action="@{/cards/{id}/edit(id=${card.id})}" th:object="${card}" method="post">
+    <div>
+        <label>Question:</label>
+        <input type="text" th:field="*{question}" />
+    </div>
+    <div>
+        <label>Answer:</label>
+        <input type="text" th:field="*{answer}" />
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
+<p><a th:href="@{/cards}">Back to cards</a></p>
+</body>
+
+
+
+
+</html>

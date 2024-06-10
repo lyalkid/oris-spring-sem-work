@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="eng-ru"
+>
+<head>
+    <meta charset="utf-8">
+    <title>My profile</title>
+
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ffffff; /* Белый цвет шрифта */
+            background-color: #1a237e; /* Темно-синий цвет фона */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        div {
+            text-align: center;
+        }
+
+        form {
+            background: #3949ab; /* Светло-синий цвет фона */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 50px auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #1a237e; /* Темно-синий цвет */
+            color: #ffffff; /* Белый цвет для текста на кнопке */
+            font-size: 17px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #555; /* Темно-серый цвет при наведении */
+        }
+
+        a {
+            color: #ffc107; /* Светло-желтый цвет */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+        }
+
+        .success {
+            color: #00418f; /* Синий цвет */
+            font-size: 12px;
+            margin-top: -10px;
+        }
+
+        /* Сброс стандартных отступов и границ */
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Profile page</h1>
+
+<div>
+    <h2>Имя: <span th:text="${student.username}">Имя</span></h2>
+    <h2>Количество карточек: <span th:text="${cardCount}">0</span></h2>
+</div>
+
+<div>
+    <h3>Описание</h3>
+    <form action="#" th:action="@{/my-profile/update}" method="post">
+        <textarea name="description" th:field="*{student.description}" rows="4" cols="50"></textarea>
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+
+<p><a th:href="@{/cards}">Back to cards</a></p>
+</body>
+
+
+</html>
